@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 import { useLocation } from "react-router-dom";
+import { useAuth } from "./auth";
 
 const Header = () => {
+  const { user } = useAuth();
   const [expanded, setExpanded] = useState("");
   const { pathname } = useLocation();
 
   useEffect(() => {
-    console.log(pathname);
     setExpanded("");
   }, [pathname]);
 
@@ -19,7 +20,7 @@ const Header = () => {
       bg="dark"
       className="bg-body-tertiary border-bottom"
     >
-      <Container className="container-fluid">
+      <Container fluid>
         <LinkContainer to={"/"} onClick={() => setExpanded("")}>
           <Navbar.Brand>단어장</Navbar.Brand>
         </LinkContainer>
@@ -29,18 +30,32 @@ const Header = () => {
         ></Navbar.Toggle>
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="mr-auto">
-            <LinkContainer to="/intro">
+            <LinkContainer to="/" onClick={() => setExpanded("")}>
               <Nav.Link>소개</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/signin">
-              <Nav.Link>Sign in</Nav.Link>
+            <LinkContainer
+              to="/mypage"
+              onClick={() =>
+                setExpanded((prev) => (prev === "" ? "expanded" : ""))
+              }
+            >
+              <Nav.Link>내단어장</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/login">
-              <Nav.Link>로그인</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/signup">
-              <Nav.Link>SignUp</Nav.Link>
-            </LinkContainer>
+            {!user && (
+              <LinkContainer to="/signin">
+                <Nav.Link>Sign in</Nav.Link>
+              </LinkContainer>
+            )}
+            {!user && (
+              <LinkContainer to="/login">
+                <Nav.Link>로그인</Nav.Link>
+              </LinkContainer>
+            )}
+            {!user && (
+              <LinkContainer to="/signup">
+                <Nav.Link>SignUp</Nav.Link>
+              </LinkContainer>
+            )}
           </Nav>
         </Navbar.Collapse>
       </Container>

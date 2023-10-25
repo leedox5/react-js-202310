@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Container } from "react-bootstrap";
 import Table from "react-bootstrap/Table";
 import { Link } from "react-router-dom";
+import { useAuth } from "./auth";
+import { WordsContext } from "./words";
+import { useSearch } from "./search";
 
 const Comp20231003 = () => {
   /*
@@ -10,16 +13,20 @@ const Comp20231003 = () => {
     { word: "10020", meaning: "축하" },
   ];
   */
-
-  const [words, setWords] = useState([]);
+  const { user } = useAuth();
+  //const [words, setWords] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const { words, loadWords, opt } = useContext(WordsContext);
+
+  const { search } = useSearch();
+
   useEffect(() => {
-    setIsLoading(true);
-    const accessToken = localStorage.getItem("access");
+    //setIsLoading(true);
+    /* ---
     fetch("/api/v1/words", {
       headers: {
-        Authorization: "Bearer " + accessToken,
+        Authorization: "Bearer " + user.access_token,
       },
     })
       .then((response) => {
@@ -36,6 +43,8 @@ const Comp20231003 = () => {
       .catch((error) => {
         console.log(error.message);
       });
+      --- */
+    //loadWords(opt, search.key, search.page);
   }, []);
 
   return (
@@ -51,7 +60,7 @@ const Comp20231003 = () => {
           {words.map((word, index) => (
             <tr key={index}>
               <td>
-                <Link to="/detail">{word.word}</Link>
+                <Link to={"/detail/" + word.id}>{word.word}</Link>
               </td>
               <td>{word.meaning}</td>
             </tr>

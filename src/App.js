@@ -14,6 +14,11 @@ import HomeLayout from "./HomeLayout";
 import Title from "./components/Title";
 import Page20231001 from "./pages/Page20231001";
 import Page20231002 from "./pages/Page20231002";
+import NotFound from "./components/NotFound";
+import RequireAuth from "./components/RequireAuth";
+import { AuthProvider } from "./components/auth";
+import { OptProvider } from "./components/counter";
+import { SearchProvider } from "./components/search";
 
 function App() {
   const [data, setData] = useState();
@@ -32,6 +37,7 @@ function App() {
   };
 
   useEffect(() => {
+    /*
     const refreshToken = localStorage.getItem("refresh");
     console.log(refreshToken);
     if (refreshToken) {
@@ -39,28 +45,44 @@ function App() {
         console.log(res);
         setData(res);
       });
-    } else {
-      document.location = "http://localhost:8080";
     }
+    */
   }, []);
 
   return (
-    <BrowserRouter>
-      <Header />
-      <Title username={data} />
-      <Routes>
-        <Route element={<HomeLayout />}>
-          <Route path="/" element={<Home username={data} />}></Route>
-          <Route path="/signin" element={<Signin />}></Route>
-          <Route path="/login" element={<Login />} />
-        </Route>
-        <Route path="/intro" element={<Home />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/mypage" element={<Page20231001 />} />
-        <Route path="/detail" element={<Page20231002 />}></Route>
-        <Route path="/signin" element={<Signin />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <SearchProvider>
+        <OptProvider>
+          <BrowserRouter>
+            <Header />
+            <Routes>
+              <Route path="/" element={<HomeLayout />}>
+                <Route
+                  index
+                  element={
+                    <RequireAuth>
+                      <Home />
+                    </RequireAuth>
+                  }
+                />
+                <Route path="signin" element={<Signin />} />
+                <Route path="signup" element={<Signup />} />
+                <Route
+                  path="mypage"
+                  element={
+                    <RequireAuth>
+                      <Page20231001 />
+                    </RequireAuth>
+                  }
+                />
+                <Route path="detail/:id" element={<Page20231002 />} />
+              </Route>
+              <Route path="*" element={<NotFound />}></Route>
+            </Routes>
+          </BrowserRouter>
+        </OptProvider>
+      </SearchProvider>
+    </AuthProvider>
     /* ---
     <div className="App">
       <header className="App-header">

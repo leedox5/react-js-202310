@@ -1,7 +1,50 @@
-import React from "react";
-import { Container, Row, Col, Button, Card, Accordion } from "react-bootstrap";
+import axios from "axios";
+import { useState, useEffect } from "react";
+import {
+  Container,
+  Row,
+  Col,
+  Button,
+  Card,
+  Accordion,
+  Spinner,
+} from "react-bootstrap";
+import { Link, useParams } from "react-router-dom";
+import { useAuth } from "../components/auth";
 
 const Page20231002 = () => {
+  const { user } = useAuth();
+  const { id } = useParams();
+  const [word, setWord] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchWord = async () => {
+    try {
+      const result = await axios.get("/api/v1/word/" + id, {
+        headers: {
+          Authorization: "Bearer " + user.access_token,
+        },
+      });
+      console.log(result.data);
+      setIsLoading(false);
+      setWord(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    fetchWord();
+  }, []);
+
+  if (isLoading) {
+    return (
+      <Container className="text-center">
+        <Spinner animation="border" role="sataus"></Spinner>
+      </Container>
+    );
+  }
+
   return (
     <Container className="my-2">
       <Row className="border-bottom">
@@ -9,7 +52,14 @@ const Page20231002 = () => {
           <h2>10010</h2>
         </Col>
         <Col ms={8} className="text-end">
-          <Button>목록으로</Button>
+          <Link
+            to="/mypage"
+            variant="outline-secondary"
+            size="sm"
+            className="mb-1"
+          >
+            목록으로
+          </Link>
         </Col>
       </Row>
       <h6 className="small text-muted text-end mt-1">조회수 : 3</h6>
@@ -18,21 +68,20 @@ const Page20231002 = () => {
           <Card.Text>소개</Card.Text>
         </Card.Body>
         <Card.Footer className="text-end">
-          <Button className="small">수정</Button>
+          <Button variant="outline-secondary" size="sm">
+            수정
+          </Button>
         </Card.Footer>
       </Card>
-      <Accordion defaultActiveKey={["0"]} alwaysOpen>
-        <Accordion.Item eventKey="0">
-          <Accordion.Header>안녕하세요!</Accordion.Header>
-          <Accordion.Body>나만의 단어를 저장하고 공부해 보세요.</Accordion.Body>
-        </Accordion.Item>
-        <Accordion.Item eventKey="1">
-          <Accordion.Header>업데이트</Accordion.Header>
-          <Accordion.Body>
-            [2022.09.21] 단어장 오픈 [2023.08.21] 페이징 처리 [2023.09.13]
-            오픈단어장 추가 [2023.09.19] 단어장 생성 기능
-          </Accordion.Body>
-        </Accordion.Item>
+      <Accordion defaultActiveKey={[0]} alwaysOpen>
+        {word.meanings.map((item, idx) => (
+          <Accordion.Item eventKey={idx} key={item.id}>
+            <Accordion.Header>{item.id}</Accordion.Header>
+            <Accordion.Body style={{ whiteSpace: "pre-line" }}>
+              {item.meaning}
+            </Accordion.Body>
+          </Accordion.Item>
+        ))}
       </Accordion>
     </Container>
   );

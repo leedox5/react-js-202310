@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { getHome } from "../apis/getHome";
+import { useAuth } from "../components/auth";
+import { Container, Spinner } from "react-bootstrap";
 
-const msg = `안녕하세요!
-나만의 단어를 저장하고 공부해 보세요
-`;
-
-const Home = ({ username }) => {
+const Home = () => {
   /* ---
   const [data, setData] = useState();
   const [loading, setLoading] = useState(true);
@@ -21,20 +19,21 @@ const Home = ({ username }) => {
   
   if (loading) return <div>Loading...</div>;
   --- */
+
+  const { user, login, logout } = useAuth();
   const [word, setWord] = useState({});
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     setIsLoading(true);
-    const accessToken = localStorage.getItem("access");
 
-    if (!accessToken) {
+    if (!user.access_token) {
       return;
     }
 
     fetch("/api/v1/intro", {
       headers: {
-        Authorization: "Bearer " + accessToken,
+        Authorization: "Bearer " + user.access_token,
       },
     })
       .then((response) => {
@@ -55,9 +54,9 @@ const Home = ({ username }) => {
 
   if (isLoading) {
     return (
-      <section>
-        <p>Loading ...</p>
-      </section>
+      <Container className="text-center">
+        <Spinner animation="border" role="sataus"></Spinner>
+      </Container>
     );
   }
 
@@ -69,7 +68,7 @@ const Home = ({ username }) => {
             <h2>소개</h2>
           </div>
           <div className="col-4 text-end">
-            <Link to="/signin" className="btn btn-sm btn-primary">
+            <Link to="/mypage" className="btn btn-sm btn-secondary">
               시작하기
             </Link>
           </div>

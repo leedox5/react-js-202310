@@ -1,14 +1,17 @@
 import React, { useState } from "react";
-import { Container, Form, Button } from "react-bootstrap";
+import { Container, Form, Button, Row, Col } from "react-bootstrap";
 import { signin } from "../apis/signin";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
+import { useAuth } from "../components/auth";
 
 const Signin = () => {
   const initState = {
     username: "",
     password: "",
   };
+
+  const { login } = useAuth();
 
   /*
   const [username, setUsername] = useState("");
@@ -49,8 +52,12 @@ const Signin = () => {
         console.log(data);
         const { access_token, refresh_token } = data;
 
+        /* ---
         localStorage.setItem("access", access_token);
         localStorage.setItem("refresh", refresh_token);
+        --- */
+        login(data);
+
         router("/");
       })
       .catch((error) => {
@@ -84,6 +91,14 @@ const Signin = () => {
 
   return (
     <Container className="my-4">
+      <Row>
+        <Col>
+          <h4>로그인</h4>
+        </Col>
+        <Col className="text-end">
+          또는 <Link to="/signup">계정을 만드세요</Link>
+        </Col>
+      </Row>
       <Form onSubmit={handleSubmit(onSubmit, onError)}>
         <Form.Group className="mb-3" controlId="email">
           <Form.Label>이메일</Form.Label>
