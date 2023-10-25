@@ -58,7 +58,8 @@ const Signin = () => {
         --- */
         login(data);
 
-        router("/");
+        //router("/", {replace:true});
+        window.location.assign("/");
       })
       .catch((error) => {
         console.log(error.message);
