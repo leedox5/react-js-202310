@@ -17,7 +17,7 @@ const Comp20231003 = () => {
   //const [words, setWords] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  const { words, loadWords, opt } = useContext(WordsContext);
+  const { words, loadWords, pageInfo } = useContext(WordsContext);
 
   const { search } = useSearch();
 
@@ -49,6 +49,10 @@ const Comp20231003 = () => {
 
   return (
     <Container>
+      <h6 className="small text-muted text-end mt-1">
+        조회건수 : {pageInfo.totalElements}
+      </h6>
+
       <Table striped bordered hover size="sm">
         <thead>
           <tr>

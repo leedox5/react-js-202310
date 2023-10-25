@@ -4,7 +4,11 @@ import { useLocalStorage } from "./useLocalStorage";
 const SearchContext = createContext({});
 
 export const SearchProvider = ({ children }) => {
-  const [search, setSearch] = useLocalStorage("search", {});
+  const [search, setSearch] = useLocalStorage("search", {
+    opt: "eng",
+    key: "",
+    page: 1,
+  });
 
   const setSearchOpt = (searchOpt) => {
     setSearch(searchOpt);

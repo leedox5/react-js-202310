@@ -3,9 +3,9 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "./auth";
 
 const RequireAuth = ({ children }) => {
-  const auth = useAuth();
+  const { user } = useAuth();
 
-  if (!auth.user) {
+  if (!user) {
     return <Navigate to="/signin" />;
   }
   return children;
