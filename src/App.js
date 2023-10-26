@@ -5,7 +5,7 @@ import { getHome } from "./apis/getHome";
 
 import Home from "./pages/Home";
 import Signup from "./pages/Signup";
-import Mypage from "./pages/Mypage";
+import MyBook from "./pages/MyBook";
 import Signin from "./pages/Signin";
 import Header from "./components/Header";
 import Navbar from "./components/Navbar";
@@ -52,35 +52,26 @@ function App() {
   return (
     <AuthProvider>
       <SearchProvider>
-        <OptProvider>
-          <BrowserRouter>
-            <Header />
-            <Routes>
-              <Route path="/" element={<HomeLayout />}>
-                <Route
-                  index
-                  element={
-                    <RequireAuth>
-                      <Home />
-                    </RequireAuth>
-                  }
-                />
-                <Route path="signin" element={<Signin />} />
-                <Route path="signup" element={<Signup />} />
-                <Route
-                  path="mypage"
-                  element={
-                    <RequireAuth>
-                      <Page20231001 />
-                    </RequireAuth>
-                  }
-                />
-                <Route path="detail/:id" element={<Page20231002 />} />
-              </Route>
-              <Route path="*" element={<NotFound />}></Route>
-            </Routes>
-          </BrowserRouter>
-        </OptProvider>
+        <BrowserRouter>
+          <Header />
+          <Routes>
+            <Route path="/" element={<HomeLayout />}>
+              <Route index element={<Home />} />
+              <Route path="signin" element={<Signin />} />
+              <Route path="signup" element={<Signup />} />
+              <Route
+                path="mypage"
+                element={
+                  <RequireAuth>
+                    <MyBook />
+                  </RequireAuth>
+                }
+              />
+              <Route path="detail/:id" element={<Page20231002 />} />
+            </Route>
+            <Route path="*" element={<NotFound />}></Route>
+          </Routes>
+        </BrowserRouter>
       </SearchProvider>
     </AuthProvider>
     /* ---

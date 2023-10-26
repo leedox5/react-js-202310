@@ -1,13 +1,17 @@
 import { getAuthAxios } from "./authAxios";
 
 export const getHome = async () => {
-  const access = localStorage.getItem("access");
+  const user = localStorage.getItem("user");
 
-  const authAxios = getAuthAxios(access);
+  try {
+    const authAxios = getAuthAxios(JSON.parse(user).access_token);
+    const result = await authAxios.get("api/v1/auth/intro");
+    return result.data;
+  } catch (error) {
+    console.log(error.message);
+    throw new Error(error);
+  }
 
-  const result = await authAxios.get("api/v1/demo");
-
-  return result.data;
   /* ---
   try {
     const result = await axios.get(

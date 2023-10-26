@@ -23,5 +23,9 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => {
-  return useContext(AuthContext);
+  const value = useContext(AuthContext);
+  if (value === undefined) {
+    throw new Error("useAuth Error !!!");
+  }
+  return value;
 };

@@ -9,7 +9,7 @@ import {
   Accordion,
   Spinner,
 } from "react-bootstrap";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../components/auth";
 
 const Page20231002 = () => {
@@ -17,6 +17,13 @@ const Page20231002 = () => {
   const { id } = useParams();
   const [word, setWord] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+
+  const navigate = useNavigate();
+
+  const location = useLocation();
+
+  console.log(location.state);
+  const pageInfo = location.state;
 
   const fetchWord = async () => {
     try {
@@ -53,7 +60,8 @@ const Page20231002 = () => {
         </Col>
         <Col ms={8} className="text-end">
           <Link
-            to="/mypage"
+            to={"/mypage"}
+            state={pageInfo}
             variant="outline-secondary"
             size="sm"
             className="mb-1"

@@ -13,11 +13,15 @@ export const getAuthAxios = (token) => {
     (res) => res,
     async (error) => {
       if (error.response.status === 401) {
-        const { accessToken, refreshToken } = await getRefreshToken();
-        error.config.headers.Authorization = "Bearer " + accessToken;
-        localStorage.setItem("access", accessToken);
-        localStorage.setItem("refresh", refreshToken);
+        const data = await getRefreshToken();
+
+        error.config.headers.Authorization = "Bearer " + data.access_token;
+
+        localStorage.setItem("user", JSON.stringify(data));
+
         return (await axios.get(error.config.url, error.config)).data;
+      } else if (error.response.status == 500) {
+        throw new Error(error);
       }
     }
   );

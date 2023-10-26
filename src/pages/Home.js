@@ -5,37 +5,29 @@ import { useAuth } from "../components/auth";
 import { Container, Spinner } from "react-bootstrap";
 
 const Home = () => {
-  /* ---
-  const [data, setData] = useState();
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    getHome().then((res) => {
-      console.log(res);
-      setData(res);
-      setLoading(false);
-    });
-  }, []);
-  
-  if (loading) return <div>Loading...</div>;
-  --- */
-
-  const { user, login, logout } = useAuth();
   const [word, setWord] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  /* ---
+  useEffect(() => {
+    getHome()
+      .then((data) => {
+        console.log(data);
+        setWord(data);
+        setIsLoading(false);
+      })
+      .catch((error) => {
+        console.log(error.message);
+        setErrorMessage(error.message);
+      });
+  }, []);
+  --- */
 
   useEffect(() => {
     setIsLoading(true);
 
-    if (!user.access_token) {
-      return;
-    }
-
-    fetch("/api/v1/intro", {
-      headers: {
-        Authorization: "Bearer " + user.access_token,
-      },
-    })
+    fetch("/api/v1/auth/intro")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`${response.status} 에러가 발생했습니다.`);
@@ -49,8 +41,17 @@ const Home = () => {
       })
       .catch((error) => {
         console.log(error.message);
+        setErrorMessage(error.message);
       });
   }, []);
+
+  if (errorMessage) {
+    return (
+      <Container>
+        <div className="alert alert-danger text-center">{errorMessage}</div>
+      </Container>
+    );
+  }
 
   if (isLoading) {
     return (
